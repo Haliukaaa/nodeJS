@@ -9,7 +9,7 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:8080/user");
+        const res = await fetch("http://localhost:8080/data");
         const data = await res.json();
         setData(data);
       } catch (error) {
@@ -23,7 +23,7 @@ export default function Home() {
 
   const handleSubmit = async () => {
     try {
-      const res = await fetch("http://localhost:8080/user", {
+      const res = await fetch("http://localhost:8080/data", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,6 +40,19 @@ export default function Home() {
       setError(error.message);
     }
   };
+
+  const handleDelete = async (index) => {
+    const res = await fetch(`http://localhost:8080/data/${index}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if(res.ok) {
+      setData(data.filter((_ , i ) => i !== index))
+    }
+  }
 
   return (
     <div>
@@ -73,6 +86,8 @@ export default function Home() {
             <div key={index} className="flex gap-4">
               <div>Name: {el.name}</div>
               <div>Age: {el.age}</div>
+              <button>edit</button>
+              <button onClick={() => handleDelete(index)}>delete</button>
             </div>
           ))}
       </div>

@@ -7,8 +7,8 @@ import fs from "fs";
 //       console.log("Successfully created a new folder");
 //     }
 // });
-const users = fs.readFileSync("database.json");
-console.log(users.toString());
+// const users = fs.readFileSync("database.json");
+// console.log(users.toString());
 // const data = {age: 18, name: "Bilguundul"};
 // fs.writeFileSync("database.json", JSON.stringify(data), (err) => {
 //     if (err) {

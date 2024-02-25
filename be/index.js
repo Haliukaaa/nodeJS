@@ -28,18 +28,26 @@ app.post("/data", (request, response) => {
   });
 });
 
-app.delete("/data/:index", (request, response) => {
-  const indexToDelete = request.params.index;
-  // Check if the index is valid
-  if (indexToDelete < 0 || indexToDelete >= users.length) {
-    return response.status(400).json({ error: "Invalid index" });
-  }
 
-  // Remove the user at the specified index
-  users.splice(indexToDelete, 1);
-  // Respond with the updated data
-  response.json(users);
+
+app.delete("/data/:index", (request, response) => {
+  const index = parseInt(request.params.index);
+  let data;
+
+  try {
+    const previousData = fs.readFileSync("database.json", "utf8");
+    data = JSON.parse(previousData);
+    
+    data.splice(index, 1);
+
+    fs.writeFileSync("database.json", JSON.stringify(data), "utf8");
+
+    response.json(data);
+  } catch (error) {
+    console.error("Error:", error);
+  }
 });
+
 
 
 app.listen(port, () => {
