@@ -28,8 +28,6 @@ app.post("/data", (request, response) => {
   });
 });
 
-
-
 app.delete("/data/:index", (request, response) => {
   const index = parseInt(request.params.index);
   let data;
@@ -37,7 +35,7 @@ app.delete("/data/:index", (request, response) => {
   try {
     const previousData = fs.readFileSync("database.json", "utf8");
     data = JSON.parse(previousData);
-    
+
     data.splice(index, 1);
 
     fs.writeFileSync("database.json", JSON.stringify(data), "utf8");
@@ -47,8 +45,6 @@ app.delete("/data/:index", (request, response) => {
     console.error("Error:", error);
   }
 });
-
-
 
 app.listen(port, () => {
   console.log(`Your server is on on the port "http:localhost:${8080}"`);
