@@ -15,18 +15,17 @@ export default function Home() {
   const [openIndex, setOpenIndex] = useState(null);
   const [editStatus, setEditStatus] = useState("");
 
-
+  const fetchData = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/data");
+      const data = await res.json();
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(error.message);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch("http://localhost:8080/data");
-        const data = await res.json();
-        setData(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError(error.message);
-      }
-    };
 
     fetchData();
   }, []);
@@ -41,12 +40,15 @@ export default function Home() {
         body: JSON.stringify({ name, age, email, status }),
       });
 
-      const newData = await res.json();
-      setData([...data, newData]);
-      setName("");
-      setAge("");
-      setEmail("");
-      setStatus("active");
+      if (res.ok) {
+        const newData = await res.json();
+        setData([...data, newData]);
+        setName("");
+        setAge("");
+        setEmail("");
+        setStatus("active");
+      } else {
+      }
     } catch (error) {
       console.error("Error submitting data:", error);
       setError(error.message);
@@ -80,12 +82,15 @@ export default function Home() {
 
   const handleUpdate = async () => {
     const newData = [...data];
-    newData[editIndex] = { name: editName, age: editAge, email: editEmail, status: editStatus };
+    newData[editIndex] = {
+      name: editName,
+      age: editAge,
+      email: editEmail,
+      status: editStatus,
+    };
     setData(newData);
     setEditIndex(null);
   };
-  
-  
 
   return (
     <div>
