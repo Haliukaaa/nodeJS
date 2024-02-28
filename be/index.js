@@ -28,23 +28,24 @@ app.post("/data", (request, response) => {
   });
 });
 
-app.delete("/data/:index", (request, response) => {
-  const index = parseInt(request.params.index);
-  let data;
-
+app.delete("/data/:id", (request, response) => {
+  const { id } = request.params;
   try {
-    const previousData = fs.readFileSync("database.json", "utf8");
-    data = JSON.parse(previousData);
+    let previousData = fs.readFileSync("database.json", "utf8");
+    let datas = JSON.parse(previousData);
 
-    data.splice(index, 1);
+    const index = datas.findIndex((data) => data.id === id);
+      datas = datas.slice(0, index).concat(datas.slice(index + 1));
+      
+      fs.writeFileSync("database.json", JSON.stringify(datas), "utf8");
+      response.json(datas);
 
-    fs.writeFileSync("database.json", JSON.stringify(data), "utf8");
-
-    response.json(data);
   } catch (error) {
     console.error("Error:", error);
+    response.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 app.listen(port, () => {
   console.log(`Your server is on on the port "http:localhost:${8080}"`);
